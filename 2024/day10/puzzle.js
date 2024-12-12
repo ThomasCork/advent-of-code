@@ -1,159 +1,119 @@
 const fs = require('fs');
-let data = fs.readFileSync('.\\input.txt', 'utf8');
+let data = fs.readFileSync('.\\input.txt', 'utf8').split('\r\n')
+    .map(line => line.split('').map(Number));
+
+function findStartPoints(data)
+{
+    let startCoords = [];
+
+    for (let i = 0; i < data.length; i++) {
+        for (let j = 0; j < data[i].length; j++) {
+            if (data[i][j] === 0)
+                startCoords.push({ y: i , x: j });
+        }
+    }
+
+    return startCoords;
+}
+
+let nines = new Set();
+let ninesArr = [];
+function traversePath(map, coords)
+{
+    console.log(coords);
+    let thisNumber = map[coords.y][coords.x];
+
+    if (thisNumber === 9)
+    {
+        console.log("FOUND 9")
+        nines.add(JSON.stringify(coords));
+        return 1;
+    }
+
+
+    // Top
+    let topCoords = { y: coords.y - 1, x: coords.x };
+    let rightCoords = { y: coords.y, x: coords.x + 1 };
+    let bottomCoords = { y: coords.y + 1, x: coords.x };
+    let leftCoords = { y: coords.y , x: coords.x - 1 };
+
+    let top = map?.[topCoords.y]?.[topCoords.x];
+    let right = map?.[rightCoords.y]?.[rightCoords.x];
+    let bottom = map?.[bottomCoords.y]?.[bottomCoords.x];
+    let left = map?.[leftCoords.y]?.[leftCoords.x];
+
+    let sum = 0;
+    if (top && thisNumber + 1 === top)
+    {
+        sum += traversePath(map, topCoords)
+    }
+
+    if (right && thisNumber + 1 === right)
+    {
+        sum += traversePath(map, rightCoords)
+    }
+
+    if (bottom && thisNumber + 1 === bottom)
+    {
+        sum += traversePath(map, bottomCoords)
+    }
+
+    if (left && thisNumber + 1 === left)
+    {
+        sum += traversePath(map, leftCoords)
+    }
+    //
+    // let topCount =
+    // let rightCount = (right && thisNumber + 1 === right) ? traversePath(map, rightCoords) : 0;
+    // let bottomCount = (bottom && thisNumber + 1 === bottom) ? traversePath(map, bottomCoords) : 0;
+    // let leftCount = (left && thisNumber + 1 === left) ? traversePath(map, leftCoords) : 0;
+    //
+    //
+    //
+    // let sum = topCount + rightCount + bottomCount + leftCount;
+
+    return sum;
+
+    // console.warn(nines)
+
+    // Right
+    // Bottom
+    // Left
+
+
+}
 
 let task1 = () => {
-    let chars = data.split('');
+    let startPoints = findStartPoints(data);
+    console.log('startPoints', startPoints)
 
-    let unpacked = [];
-    for (let i = 0; i < chars.length; i++) {
-        let number = Number(chars[i]);
-
-        for (let j = 0; j < number; j++)
-        {
-            if (i % 2 === 0)
-            {
-                unpacked.push(i / 2);
-            }
-            else
-            {
-                unpacked.push(".");
-            }
-        }
-    }
-
-    for (let i = 0; i < unpacked.length; i++)
+    let pathsCount = 0;
+    for (let coords of startPoints)
     {
-        if (i >= unpacked.length)
-            break;
+        traversePath(data, coords);
 
-        // If blank spot
-        if (unpacked[i] && unpacked[i] === ".")
-        {
-            while (i < unpacked.length)
-            {
-                let temp = unpacked.pop();
-
-                if (temp && temp !== ".")
-                {
-                    unpacked[i] = temp;
-                    break;
-                }
-            }
-        }
+        pathsCount += [...nines].length;
+        nines.clear();
     }
 
-    let checksum = unpacked.reduce((checksum, currentValue, index) => {
-        return checksum + (index * currentValue)
-    }, 0);
-    return checksum;
+    // return
+    return pathsCount;
+
 }
-console.log('Day 09 - Task 01 Answer: ', task1());
+console.log('Day 10 - Task 01 Answer: ', task1());
 
 
 let task2 = () => {
-    let chars = data.split('');
+    let startPoints = findStartPoints(data);
+    console.log('startPoints', startPoints)
 
-    function readInput(chars) {
-        let unpacked = [];
-        for (let i = 0; i < chars.length; i++) {
-            let number = Number(chars[i]);
-
-            for (let j = 0; j < number; j++) {
-                if (i % 2 === 0) {
-                    unpacked.push(i / 2);
-                } else {
-                    unpacked.push(".");
-                }
-            }
-        }
-
-        return unpacked;
-    }
-
-    let unpacked = readInput(chars);
-
-    // console.log(unpacked.join(""))
-
-
-    let visited = new Set();
-
-    function getNextGroup(unpacked) {
-        let index;
-        let number;
-
-        for (let i = unpacked.length -1; i >= 0; i--)
-        {
-
-
-            if (unpacked[i] && unpacked[i] !== "." && !visited.has(unpacked[i]))
-            {
-                // console.log('visited', unpacked[i])
-                visited.add(unpacked[i]);
-
-                let firstIndex = unpacked.indexOf(unpacked[i]);
-                // console.log('firstIndex', firstIndex, i - firstIndex + 1)
-                return { id: unpacked[i], index: firstIndex, length: i - firstIndex + 1 };
-            }
-        }
-
-        return null;
-    }
-
-    function getNextAvailableSpace(unpacked, size)
+    let pathsCount = 0;
+    for (let coords of startPoints)
     {
-        let nextAvailableSpaceStartIndex = 0;
-        let count = 0;
-        for (let i = 0; i < unpacked.length; i++)
-        {
-            if (unpacked[i] === ".") {
-                if (count === 0 || nextAvailableSpaceStartIndex + count < i)
-                {
-                    nextAvailableSpaceStartIndex = i;
-                    count = 1;
-                }
-                else
-                {
-                    count++;
-                }
-
-                if (count === size)
-                {
-                    return { character: ".", index: nextAvailableSpaceStartIndex, length: count };
-                }
-            }
-        }
-
-        return null;
+        pathsCount += traversePath(data, coords);
     }
 
-    let nextGroup = true;
-    while (nextGroup)
-    {
-        let nextGroup = getNextGroup(unpacked);
-
-        if (!nextGroup)
-            break;
-        // console.log('nextGroup', nextGroup)
-        let nextAvailableSpace = getNextAvailableSpace(unpacked, nextGroup.length);
-
-        // console.log('no available space found for', nextGroup )
-        if (!nextAvailableSpace)
-            continue;
-
-        if (nextGroup.index > nextAvailableSpace.index)
-        {
-            let numbersRemoved = unpacked.splice(nextGroup.index, nextGroup.length, ...new Array(nextGroup.length).fill( "."));
-            unpacked.splice(nextAvailableSpace.index, nextAvailableSpace.length, ...numbersRemoved);
-        }
-    }
-
-
-    let checksum = unpacked.reduce((checksum, currentValue, index) => {
-        if (currentValue != ".")
-            return checksum + (index * Number(currentValue));
-        return checksum;
-    }, 0);
-
-    return checksum;
+    // return
+    return pathsCount;
 }
-console.log('Day 09 - Task 02 Answer: ', task2());
+console.log('Day 10 - Task 02 Answer: ', task2());
