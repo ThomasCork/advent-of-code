@@ -1,6 +1,6 @@
 const fs = require('fs');
 const zlib = require("node:zlib");
-let data = fs.readFileSync('.\\input.txt', 'utf8').split('\r\n');
+let data = fs.readFileSync('./input.txt', 'utf8').split('\r\n');
 
 let task1 = () => {
     const DIRECTIONS = {

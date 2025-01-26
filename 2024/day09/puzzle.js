@@ -1,5 +1,5 @@
 const fs = require('fs');
-let data = fs.readFileSync('.\\input.txt', 'utf8');
+let data = fs.readFileSync('./input.txt', 'utf8');
 
 let task1 = () => {
     let chars = data.split('');

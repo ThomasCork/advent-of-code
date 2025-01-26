@@ -2,7 +2,7 @@ const fs = require('fs');
 
 let task1 = () => {
 
-    let data = fs.readFileSync('.\\input.txt', 'utf8').split(" ").map(Number);
+    let data = fs.readFileSync('./input.txt', 'utf8').split(" ").map(Number);
 
     let blink = (number) => {
         if (number === 0)
@@ -48,7 +48,7 @@ console.log('Day 10 - Task 01 Performance: ',  t1_2 - t1_1);
 
 let task2 = () => {
 
-    let data = fs.readFileSync('.\\input.txt', 'utf8').split(" ").map(Number);
+    let data = fs.readFileSync('./input.txt', 'utf8').split(" ").map(Number);
 
     let cache = {};
 

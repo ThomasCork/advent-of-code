@@ -1,5 +1,5 @@
 const fs = require('fs');
-let data = fs.readFileSync('.\\input.txt', 'utf8').split('\r\n\r\n');
+let data = fs.readFileSync('./input.txt', 'utf8').split('\r\n\r\n');
 
 let task1 = () => {
     let rulesInput = data[0];

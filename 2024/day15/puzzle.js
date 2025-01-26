@@ -1,5 +1,5 @@
 const fs = require('fs');
-let data = fs.readFileSync('.\\input.txt', 'utf8');
+let data = fs.readFileSync('./input.txt', 'utf8');
 
 function readInput(data) {
     let [ mapString, moveString ] = data.split('\r\n\r\n');

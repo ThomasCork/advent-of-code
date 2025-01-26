@@ -1,5 +1,5 @@
 const fs = require('fs');
-let data = fs.readFileSync('.\\input.txt', 'utf8').split('\r\n')
+let data = fs.readFileSync('./input.txt', 'utf8').split('\r\n')
     .map(line => line.split('').map(Number));
 
 function findStartPoints(data)

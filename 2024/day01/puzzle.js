@@ -1,5 +1,5 @@
 const fs = require('fs');
-let data = fs.readFileSync('.\\input.txt', 'utf8').split('\r\n');
+let data = fs.readFileSync('./input.txt', 'utf8').split('\r\n');
 
 // Task 1 - Distance
 let task1 = () => {
